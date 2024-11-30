@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Travel Dreams - Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .carousel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .carousel-item {
+            height: 100vh;
+        }
+
+        .carousel-item img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            filter: brightness(0.3);
+        }
+
+        .register-container {
+            background-color: rgba(33, 33, 33, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control {
+            background-color: #2c2c2c;
+            border: 1px solid #404040;
+            color: #e0e0e0;
+        }
+
+        .form-control:focus {
+            background-color: #333;
+            border-color: #0d6efd;
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: #888;
+        }
+
+        .icon-strip {
+            background-color: rgba(33, 33, 33, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .region-icon {
+            font-size: 20px;
+            margin: 0 10px;
+            color: #0d6efd;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .region-icon:hover {
+            transform: scale(1.2);
+            color: #0a58ca;
+        }
+
+        .required-field::after {
+            content: '*';
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .text-danger {
+            color: #ff6b6b !important;
+        }
+    </style>
+</head>
+<body>
+<!-- Background Carousel -->
+<div id="backgroundCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/api/placeholder/1920/1080" alt="Europe Travel">
+        </div>
+        <div class="carousel-item">
+            <img src="/api/placeholder/1920/1080" alt="Asia Travel">
+        </div>
+        <div class="carousel-item">
+            <img src="/api/placeholder/1920/1080" alt="Adventure Travel">
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Region Icons Strip -->
+    <div class="icon-strip text-center mb-4">
+            <span class="region-icon" title="Europe">
+                <i class="fas fa-landmark"></i> 🇪🇺
+            </span>
+        <span class="region-icon" title="East Asia">
+                <i class="fas fa-torii-gate"></i> 🇯🇵
+            </span>
+        <span class="region-icon" title="Southeast Asia">
+                <i class="fas fa-umbrella-beach"></i> 🇹🇭
+            </span>
+        <span class="region-icon" title="North America">
+                <i class="fas fa-mountain"></i> 🇺🇸
+            </span>
+        <span class="region-icon" title="Australia">
+                <i class="fas fa-water"></i> 🇦🇺
+            </span>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mx-auto register-container p-4">
+            <h2 class="text-center mb-4">Join Our Travel Community</h2>
+            <hr class="border-secondary"/>
+
+            <div th:if="${success}"
+                 class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Account Created Successfully!</strong>
+                <a class="ms-2 text-success" href="/login">Login</a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+
+            <form method="post" th:object="${registerDto}">
+                <input type="hidden" th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label required-field">First Name</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-user text-light"></i>
+                                </span>
+                            <input class="form-control" th:field="${registerDto.firstName}"
+                                   placeholder="Enter your first name">
+                        </div>
+                        <p th:if="${#fields.hasErrors('firstName')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.firstName}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label required-field">Last Name</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-user text-light"></i>
+                                </span>
+                            <input class="form-control" th:field="${registerDto.lastName}"
+                                   placeholder="Enter your last name">
+                        </div>
+                        <p th:if="${#fields.hasErrors('lastName')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.lastName}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label required-field">Email</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-envelope text-light"></i>
+                                </span>
+                            <input class="form-control" th:field="${registerDto.email}"
+                                   placeholder="Enter your email">
+                        </div>
+                        <p th:if="${#fields.hasErrors('email')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.email}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Phone</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-phone text-light"></i>
+                                </span>
+                            <input class="form-control" th:field="${registerDto.phone}"
+                                   placeholder="Enter your phone number">
+                        </div>
+                        <p th:if="${#fields.hasErrors('phone')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.phone}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Address</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-map-marker-alt text-light"></i>
+                                </span>
+                            <input class="form-control" th:field="${registerDto.address}"
+                                   placeholder="Enter your address">
+                        </div>
+                        <p th:if="${#fields.hasErrors('address')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.address}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label required-field">Password</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-lock text-light"></i>
+                                </span>
+                            <input class="form-control" type="password"
+                                   th:field="${registerDto.password}"
+                                   placeholder="Enter your password">
+                        </div>
+                        <p th:if="${#fields.hasErrors('password')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.password}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label required-field">Confirm Password</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary">
+                                    <i class="fas fa-lock text-light"></i>
+                                </span>
+                            <input class="form-control" type="password"
+                                   th:field="${registerDto.confirmPassword}"
+                                   placeholder="Confirm your password">
+                        </div>
+                        <p th:if="${#fields.hasErrors('confirmPassword')}"
+                           th:errorclass="text-danger"
+                           th:errors="${registerDto.confirmPassword}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="offset-sm-4 col-sm-4 d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-2"></i>Register
+                        </button>
+                    </div>
+                    <div class="col-sm-4 d-grid">
+                        <a href="/products" class="btn btn-outline-light">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

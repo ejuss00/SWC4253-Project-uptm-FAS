@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Booking Confirmation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+    }
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+    }
+    .confirmation-card {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none;
+        border-radius: 12px;
+    }
+    .confirmation-header {
+        background-color: #ffffff;
+        border-bottom: 2px solid #e9ecef;
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem;
+    }
+    .confirmation-header h2 {
+        color: #2c3e50;
+        margin: 0;
+        font-weight: 600;
+    }
+    .receipt-number {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+    .table {
+        margin-bottom: 0;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        color: #495057;
+        font-weight: 600;
+    }
+    .table td {
+        vertical-align: middle;
+        color: #495057;
+    }
+    .summary-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 0;
+    }
+    .price-row.total {
+        border-top: 2px solid #dee2e6;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+    .discount-alert {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+        border-radius: 8px;
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+    .proceed-btn {
+        background-color: #28a745;
+        border: none;
+        padding: 0.8rem 2rem;
+        font-weight: 500;
+        margin-top: 1.5rem;
+    }
+    .proceed-btn:hover {
+        background-color: #218838;
+    }
+    .timestamp {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-align: right;
+        margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card confirmation-card">
+    <div class="confirmation-header">
+      <h2>Booking Confirmation</h2>
+      <div class="receipt-number">
+        Receipt #: BOK-<span th:text="${#dates.format(#dates.createNow(), 'yyyyMMdd')}-${T(java.util.UUID).randomUUID().toString().substring(0,8)}"></span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h5 class="text-muted mb-4">Selected Vacation Packages</h5>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Package Name</th>
+            <th class="text-end">Price per Person</th>
+            <th class="text-center">Number of People</th>
+            <th class="text-end">Subtotal</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="entry : ${selectedPackages}">
+            <td>
+              <span th:text="${entry.key.name}" class="fw-medium"></span>
+            </td>
+            <td class="text-end">$<span th:text="${#numbers.formatDecimal(entry.key.price, 0, 2)}"></span></td>
+            <td class="text-center" th:text="${entry.value}"></td>
+            <td class="text-end">$<span th:text="${#numbers.formatDecimal(entry.key.price * entry.value, 0, 2)}"></span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="summary-section">
+        <h5 class="mb-4">Price Summary</h5>
+        <div class="price-row">
+          <span>Subtotal</span>
+          <span>$<span th:text="${#numbers.formatDecimal(totalPrice, 0, 2)}"></span></span>
+        </div>
+
+        <div th:if="${hasDiscount}" class="discount-alert">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>20% Multi-Package Discount Applied!</strong>
+              <p class="mb-0">Discount applied for booking 3 or more packages</p>
+            </div>
+            <div class="text-end">
+              -$<span th:text="${#numbers.formatDecimal(savings, 0, 2)}"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="price-row total">
+          <span>Final Total</span>
+          <span>$<span th:text="${#numbers.formatDecimal(finalPrice, 0, 2)}"></span></span>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="/payment" class="btn btn-primary proceed-btn">
+          Proceed to Payment
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-secondary">
+          Print Receipt
+        </button>
+      </div>
+
+      <div class="timestamp">
+        Generated on <span th:text="${#dates.format(#dates.createNow(), 'MMM dd, yyyy HH:mm')}"></span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
